@@ -1,4 +1,4 @@
 debug.log
 */.ipynb_checkpoints/*
 code/preprocess stackexchange data/.ipynb_checkpoints/
-data/*
+data/*.jsonl

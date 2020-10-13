@@ -98,7 +98,6 @@ def batch_request(pids: List[str]) -> List[dict]:
 
 if __name__ == "__main__":
     posts = load_jsonl(FILE_PATH)
-    posts = posts[:10]
     pids = search_pids(posts)
     comments = batch_request(pids)
     to_jsonl(comments, "data/comments_from_sample.jsonl")
