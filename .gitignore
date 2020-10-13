@@ -1,2 +1,4 @@
 debug.log
-*/.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+code/preprocess stackexchange data/.ipynb_checkpoints/
+data/*
