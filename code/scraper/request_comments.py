@@ -91,14 +91,15 @@ def batch_request(pids: List[str]) -> List[dict]:
     results = list()
     start = 0
     while start <= len(pids):
-        batch = pids[start:(start + 30)]
+        batch = pids[start:(start + 50)]
         comments = get_comments_by_pid(batch)
         results.extend(comments)
-        start += 30
+        start += 50
     return results
 
 if __name__ == "__main__":
     posts = load_jsonl(FILE_PATH)
     pids = search_pids(posts)
+    pids = pids[1000:]
     comments = batch_request(pids)
     to_jsonl(comments, "data/shared/comments_from_sample.jsonl")
