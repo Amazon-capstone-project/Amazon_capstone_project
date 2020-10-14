@@ -55,10 +55,11 @@ def get_comments_by_pid(pids: List[str]) -> List[str]:
         resp = requests.get(url)
         items = resp.json().get('items')
         size = len(items)
+        remainder = resp.json().get('quota_remaining')
     except Exception as ex:
         print(ex)
     else:
-        print("{} comments added.".format(size))
+        print("{} comments added; remaining quota: {}.".format(size, remainder))
     finally:
         return items
 
