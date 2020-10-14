@@ -45,7 +45,7 @@ def get_comments_by_pid(pids: List[str]) -> List[str]:
     """
     get the body markdown of comments by post ids.
     """
-    pattern = "https://api.stackexchange.com/2.2/answers/{pids}/comments?order=desc&sort=creation&site=stackoverflow&filter=!1zsjPi2)K11aj9VR04rAV"
+    pattern = "https://api.stackexchange.com/2.2/posts/{pids}/comments?order=desc&sort=creation&site=stackoverflow&filter=!SYCmj)y1jqm-OsJc)7"
     pids_str = ";".join(pids)
     url = pattern.format(pids = pids_str)
     print(url)
