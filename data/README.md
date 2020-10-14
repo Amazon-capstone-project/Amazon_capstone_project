@@ -108,3 +108,9 @@ Posts tree with comments
   "comments": []
 }
 ```
+
+## AWS service data
+```json
+{"Compute": ["Amazon-EC2", "AWS-Batch", "AWS-Elastic Beanstalk", "Amazon-EC2 Image Builder", "AWS-Lambda", "AWS-Launch Wizard", "Amazon-Lightsail", "AWS-Outposts", "AWS-ParallelCluster", "AWS-Serverless Application Model (AWS SAM)", "AWS-Serverless Application Repository", "AWS-Wavelength"], "Containers": ["Amazon-ECR", "Amazon-ECS", "Amazon-EKS", "AWS-App2Container"], 
+"Storage": ["Amazon-S3", "AWS-Backup", "Amazon-EBS", "Amazon-EFS", "Amazon-FSx", "Amazon-S3 Glacier", "AWS-Snow Family", "AWS-Storage Gateway"]...}
+```
