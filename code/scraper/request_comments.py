@@ -45,7 +45,7 @@ def get_comments_by_pid(pids: List[str]) -> List[str]:
     """
     get the body markdown of comments by post ids.
     """
-    pattern = "https://api.stackexchange.com/2.2/posts/{pids}/comments?order=desc&sort=creation&site=stackoverflow&filter=!SYCmj)y1jqm-OsJc)7"
+    pattern = "https://api.stackexchange.com/2.2/posts/{pids}/comments?pagesize=100&order=desc&sort=creation&site=stackoverflow&filter=!SYCmj)y1jqm-OsJc)7"
     pids_str = ";".join(pids)
     url = pattern.format(pids = pids_str)
     print(url)
@@ -90,10 +90,10 @@ def batch_request(pids: List[str]) -> List[dict]:
     results = list()
     start = 0
     while start <= len(pids):
-        batch = pids[start:(start + 90)]
+        batch = pids[start:(start + 30)]
         comments = get_comments_by_pid(batch)
         results.extend(comments)
-        start += 90
+        start += 30
     return results
 
 if __name__ == "__main__":
