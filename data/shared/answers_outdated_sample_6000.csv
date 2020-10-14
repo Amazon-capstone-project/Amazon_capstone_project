@@ -1,0 +1,708 @@
+Id,Body,PostId,PostLink
+60823374,"<p>The <a href=""https://www.npmjs.com/package/azure"" rel=""nofollow noreferrer"">azure</a> NPM package is a) deprecated and b) a rollup of all features so it's much larger than you strictly need. If you really want to continue to use this then consider using a subset of the package, specifically <code>azure-arm-*</code> or <code>azure-*</code>.</p>
+
+<p>You should consider moving to the <a href=""https://github.com/azure/azure-sdk-for-node#announcing-the-new-azure-sdk-for-javascript"" rel=""nofollow noreferrer"">newer SDK</a>, specifically the <a href=""https://www.npmjs.com/package/azure-arm-sb"" rel=""nofollow noreferrer"">azure-arm-sb</a> ServiceBus package.  Note that it too will be deprecated next year, when MS migrates it fully to TypeScript.</p>
+",60821313,https://stackoverflow.com/questions/60821313/size-limit-reached-in-aws-lambda
+44163299,"<p>According to the docs <a href=""http://docs.aws.amazon.com/AmazonS3/latest/API/RESTBucketPUTlifecycle.html"" rel=""noreferrer"">here</a> you need to add Filter element, which is required as per Amazon API, and confusingly enough, not required by boto. I added the deprecated Prefix argument instead of the Filter and it seems to be working too.</p>
+",44159204,https://stackoverflow.com/questions/44159204/aws-boto3-configuring-bucket-lifecycle-malformed-xml
+56126720,"<p>Step function seems the best solution here. See @Ashan's reply. Apart from that you can use the new invoke method in lambda nodejs sdk. Note that invokeAsync is now deprecated. You can set InvocationType to Event See the example below. which is taken from <a href=""https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Lambda.html#invoke-property"" rel=""nofollow noreferrer"">here</a></p>
+
+<pre><code>var params = {
+  ClientContext: ""MyApp"", 
+  FunctionName: ""MyFunction"", 
+  InvocationType: ""Event"", 
+  LogType: ""Tail"", 
+  Payload: &lt;Binary String&gt;, 
+  Qualifier: ""1""
+ };
+ lambda.invoke(params, function(err, data) {
+   if (err) console.log(err, err.stack); // an error occurred
+   else     console.log(data);           // successful response
+   /*
+   data = {
+    FunctionError: """", 
+    LogResult: """", 
+    Payload: &lt;Binary String&gt;, 
+    StatusCode: 123
+   }
+   */
+ }); 
+</code></pre>
+
+<p>one example use case is, first function would return an immediate response, and it would trigger another lambda function which would execute the tasks and eventually may be call a webhook. </p>
+",44668605,https://stackoverflow.com/questions/44668605/aws-lambda-to-run-in-background-even-after-sending-response-to-api-gateway
+55761393,"<p>This what The python 3.7 AWS lambda environment looks like at time of writing:</p>
+
+<pre><code>python: 3.7.2 (default, Mar 1 2019, 11:28:42)
+[GCC 4.8.3 20140911 (Red Hat 4.8.3-9)], boto3: 1.9.42, botocore: 1.12.42
+</code></pre>
+
+<p>By comparing botocore 1.12.42 (error) with 1.12.133 (working ok) I found that an outdated botocore in AWS Lambda is the culprit. One solution could be to include the latest botocore in your lambda package. For example using the the python requirements plugin:</p>
+
+<pre><code>serverless plugin install -n serverless-python-requirements
+</code></pre>
+
+<p>And creating a <code>requirements.txt</code> file containing <code>botocore==1.12.133</code></p>
+
+<p>(instead of 1.12.133 you might want to use the latest version at the time you read this)</p>
+",55295305,https://stackoverflow.com/questions/55295305/aws-boto3-unknownserviceerror-unknown-service-39apigatewaymanagementapi
+43285441,"<p><strong>These answers are out of date.</strong></p>
+
+<p>You can access elastic-cache outside of AWS by following these steps:</p>
+
+<ol>
+<li>Create a NAT instance in the same VPC as your cache cluster but in a
+public subnet. </li>
+<li>Create security group rules for the cache cluster and
+NAT instance. </li>
+<li>Validate the rules. </li>
+<li>Add an iptables rule to the NAT
+instance. </li>
+<li>Confirm that the trusted client is able to connect to the
+cluster. </li>
+<li>Save the iptables configuration.</li>
+</ol>
+
+<p>For a more detailed description see the aws guide:</p>
+
+<p><a href=""https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/accessing-elasticache.html#access-from-outside-aws"" rel=""noreferrer"">https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/accessing-elasticache.html#access-from-outside-aws</a></p>
+",21917661,https://stackoverflow.com/questions/21917661/can-you-connect-to-amazon-elasti%d0%a1ache-redis-outside-of-amazon
+59142446,"<p>This is a general question about storage technologies: ""how does a cache differ from a database?""</p>
+
+<p>A cache is not (typically) a persistent data store. Its data is ephemeral. The purpose of the cache is to increase the perceived performance of an actual database, sitting behind the cache. The database stores the actual data persistently, and is the authoritative source of data. The cache sits in front of the database and tries to improve the performance of your application by detecting queries that it already knows the answer to and serving up cached results directly to your application, to save having to go to the database.</p>
+
+<p>Of course, the cache will get out of date over time and so you need a process for expiring data from the cache when it becomes inaccurate, thus causing the next query for that piece of data to go to the actual database, and that new data can be cached until it expires.</p>
+",59141973,https://stackoverflow.com/questions/59141973/is-there-an-easy-way-to-understand-the-difference-between-aws-elasticache-and-rd
+43316867,"<p>I had the same issue. The managed policies were correct in my case, but I had to update the trust relationships for both the DataPipelineDefaultRole and DataPipelineDefaultResourceRole roles using the documentation Gonfva linked to above as they were out of date.</p>
+",28906981,https://stackoverflow.com/questions/28906981/automatic-aws-dynamodb-to-s3-export-failing-with-role-datapipelinedefaultrole-i
+52563919,"<p>The error message refers to <code>part_number</code> which is the name of a CSV column (called ""flat files"" in MWS). In XML you need to specify a <code>StandardProductID</code> instead, like this:</p>
+
+<pre><code>        &lt;StandardProductID&gt;
+            &lt;Type&gt;EAN&lt;/Type&gt;
+            &lt;Value&gt;1234567890123&lt;/Value&gt;
+        &lt;/StandardProductID&gt;    
+</code></pre>
+
+<p>Please also note, that my <code>Beauty.xsd</code> does not have <code>HairCareProduct</code>. I had to change this to <code>BeautyMisc</code> to validate the feed - but that may be due to an outdated set of XSDs.</p>
+",52495435,https://stackoverflow.com/questions/52495435/amazon-mws-api-post-product-data-submitfeed-gives-error
+46718013,"<p>The issue is that when you use the old consumer (and use the <code>--zookeeper</code> argument) the ZooKeeper port should be provided (<code>2181</code>).</p>
+
+<p>However, please note that the old consumer is now deprecated, and using the new consumer is highly recommended. Please see the answer by Mickael Maison for more info.</p>
+",46697687,https://stackoverflow.com/questions/46697687/kafka-console-consumer-not-able-to-connect-to-zookeeper-server-on-aws-ec2-server
+52899085,"<p>ElastiCache docs are way out of date; new announcements change what's available even when the three-year old docs remain unchanged. Redis on ElastiCache introduced support for online resizing in 2017. From <a href=""https://aws.amazon.com/blogs/aws/amazon-elasticache-update-online-resizing-for-redis-clusters/"" rel=""nofollow noreferrer"">the announcement</a>:</p>
+
+<blockquote>
+  <p>You can now adjust the number of shards in a running ElastiCache for
+  Redis cluster while the cluster remains online and responding to
+  requests. This gives you the power to respond to changes in traffic
+  and data volume without having to take the cluster offline or to start
+  with an empty cache. You can also rebalance a running cluster to
+  uniformly redistribute slot space without changing the number of
+  shards.</p>
+</blockquote>
+
+<p>I wish they'd update their 2015 (!) docs, but at any rate, this is the latest we have on the subject. As of October 19, 2018, on a cluster with cluster mode enabled:</p>
+
+<p>You can:</p>
+
+<ul>
+<li>Scale out (add shards)</li>
+<li>Scale in (remove shards)</li>
+<li>Rebalance (move keys among shards)</li>
+<li>Online resharding and shard balancing</li>
+</ul>
+
+<p>You cannot:</p>
+
+<ul>
+<li>Scale up/down (change node type)</li>
+<li>Upgrade your engine</li>
+<li>Configure shards independently</li>
+</ul>
+
+<p>Source: <a href=""https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/redis-cluster-resharding-online.html"" rel=""nofollow noreferrer"">https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/redis-cluster-resharding-online.html</a></p>
+",52824961,https://stackoverflow.com/questions/52824961/can-you-dynamically-resize-an-elasticache-cluster-with-cluster-mode-enabled
+62663804,"<p>For older containers using the deprecated <code>sagemaker_containers</code>, the approach you described is correct.</p>
+<p>For newer containers that use <a href=""https://github.com/aws/sagemaker-training-toolkit"" rel=""nofollow noreferrer""><code>sagemaker-training-toolkit</code></a>, this is how you retrieve information about the environment: <a href=""https://github.com/aws/sagemaker-training-toolkit#get-information-about-the-container-environment"" rel=""nofollow noreferrer"">https://github.com/aws/sagemaker-training-toolkit#get-information-about-the-container-environment</a></p>
+<pre class=""lang-py prettyprint-override""><code>from sagemaker_training import environment
+
+env = environment.Environment()
+
+job_name = env[&quot;job_name&quot;]
+</code></pre>
+<p>You can check the <a href=""https://docs.aws.amazon.com/deep-learning-containers/latest/devguide/dlc-release-notes.html"" rel=""nofollow noreferrer"">DLC Release Notes</a> to see what's installed in each version.</p>
+",62462790,https://stackoverflow.com/questions/62462790/how-can-i-get-current-job-name-in-sagemaker-training-job-script
+59107642,"<p>Solved it: switch processing to RMagick</p>
+
+<p>Within the carriewave image_uploader.rb file</p>
+
+<p>replace:</p>
+
+<p>include CarrierWave::MiniMagick</p>
+
+<p>include CarrierWave::Processing::MiniMagick</p>
+
+<p>with:</p>
+
+<p>include CarrierWave::RMagick</p>
+
+<p>include CarrierWave::Processing::RMagick</p>
+
+<p>MiniMagick is considered to have better memory management, but is rather outdated. Plus is corrupted the images. Fingers crossed RMagick has better memory management by now.</p>
+
+<p>RMagick for the win!</p>
+",58787789,https://stackoverflow.com/questions/58787789/carrierwave-recreate-versions-corrupts-original-image
+50488215,"<p>Either the method name createTags does not exist within the class AmazonEC2 or you pass a wrong parameter list to the method.</p>
+
+<p>This can also happen if the client and server side version of the aws-sdk-java api differ from each other. Be sure that you use the correct client side API.</p>
+
+<p>The AmazonE2Client is mostly deprecated: 
+@see <a href=""https://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/ec2/AmazonEC2Client.html"" rel=""nofollow noreferrer"">https://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/ec2/AmazonEC2Client.html</a></p>
+
+<p>The documentation says ""use AWSClientBuilder instead""</p>
+",50488089,https://stackoverflow.com/questions/50488089/create-tags-failing-with-error-java-lang-nosuchmethoderror
+59276158,"<p>""Bundle"" commands are outdated.</p>
+
+<p>You should simply use <strong>Create Image</strong> to create an Amazon Machine Image (AMI) of the existing instance. Then, you can <strong>Launch an instance from the AMI</strong> and it will contain an exact copy of the AMI.</p>
+
+<p>See: <a href=""https://docs.aws.amazon.com/AWSEC2/latest/WindowsGuide/Creating_EBSbacked_WinAMI.html"" rel=""nofollow noreferrer"">Creating a Custom Windows AMI - Amazon Elastic Compute Cloud</a></p>
+
+<p><strong>Recommendation:</strong> Run <code>sysprep</code> before creating the image. This will avoid conflicting machine IDs.</p>
+
+<p>See: <a href=""https://docs.aws.amazon.com/AWSEC2/latest/WindowsGuide/ami-create-standard.html"" rel=""nofollow noreferrer"">Create a Standard Amazon Machine Image Using Sysprep - Amazon Elastic Compute Cloud</a></p>
+",59268806,https://stackoverflow.com/questions/59268806/how-can-i-bundle-a-aws-ec2-windows-machine-with-installed-applications
+62772000,"<p>As in <a href=""https://docs.aws.amazon.com/cdk/latest/guide/tools.html"" rel=""nofollow noreferrer"">cdk deploy</a>, there is no such option -r. CDK thinks it is a CDK stack name.</p>
+<p>I believe you need to use a different IAM role with different IAM permissions. Which has nothing to do with CDK itself. You need to assume role first and get an STS token. Please research assume role AWS CLI of STS.</p>
+<pre><code>cdk deploy [STACKS..]
+
+Deploys the stack(s) named STACKS into your AWS account
+
+Options:
+
+  --build-exclude, -E    Do not rebuild asset with the given ID. Can be
+
+                         specified multiple times.         [array] [default: []]
+
+
+
+  --exclusively, -e      Only deploy requested stacks, don't include
+
+                         dependencies                                  [boolean]
+
+
+
+  --require-approval     What security-sensitive changes need manual approval
+
+                         [string] [choices: &quot;never&quot;, &quot;any-change&quot;, &quot;broadening&quot;]
+
+
+
+  --ci                   Force CI detection (deprecated)
+
+                                                      [boolean] [default: false]
+
+
+
+  --notification-arns    ARNs of SNS topics that CloudFormation will notify with
+
+                         stack related events                            [array]
+
+
+
+  --tags, -t             Tags to add to the stack (KEY=VALUE)            [array]
+
+
+
+  --execute              Whether to execute ChangeSet (--no-execute will NOT
+
+                         execute the ChangeSet)        [boolean] [default: true]
+
+
+
+  --force, -f            Always deploy stack even if templates are identical
+
+                                                      [boolean] [default: false]
+
+
+
+  --parameters           Additional parameters passed to CloudFormation at
+
+                         deploy time (STACK:KEY=VALUE)     [array] [default: {}]
+
+
+
+  --outputs-file, -O     Path to file where stack outputs will be written as
+
+                         JSON                                           [string]
+
+
+
+  --previous-parameters  Use previous values for existing parameters (you must
+
+                         specify all parameters on every deployment if this is
+
+                         disabled)                     [boolean] [default: true]
+</code></pre>
+",62163801,https://stackoverflow.com/questions/62163801/how-to-use-aws-role-arn-in-cdk-deploy-command
+50926351,"<p><a href=""https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html"" rel=""nofollow noreferrer"">AWS Lambda Best Practices notes</a> talks about DI:</p>
+
+<blockquote>
+  <p><strong>Minimize the complexity of your dependencies.</strong> Prefer simpler
+  frameworks that load quickly on <a href=""https://docs.aws.amazon.com/lambda/latest/dg/running-lambda-code.html"" rel=""nofollow noreferrer"">Execution Context</a> startup. For
+  example, prefer simpler Java dependency injection (IoC) frameworks
+  like <a href=""http://square.github.io/dagger/"" rel=""nofollow noreferrer"">Dagger</a> or <a href=""https://github.com/google/guice"" rel=""nofollow noreferrer"">Guice</a>, over more complex ones like <a href=""https://github.com/spring-projects/spring-framework"" rel=""nofollow noreferrer"">Spring Framework</a>.</p>
+</blockquote>
+
+<p>So I'd like to suggest you to use <a href=""https://github.com/google/dagger"" rel=""nofollow noreferrer"">Dagger 2</a> (because Square's Dagger 1.x is already deprecated). It provides such benefits:</p>
+
+<ul>
+<li>light-weight framework with very few integrations, Java interface/annotation configuration and compile-time code generated bindings;</li>
+<li>very small size;</li>
+<li>fail as early as possible ( compile-time, not runtime);</li>
+<li>performance - as fast as hand-written code and no coding around the framework.</li>
+</ul>
+",35753573,https://stackoverflow.com/questions/35753573/aws-lambda-function-with-spring-autowired-dependencies
+53966864,"<p>Michael's description is good. Amazon has also stated (link below) ""Signature Version 2 is being deprecated, and the final support for Signature Version 2 will end on June 24, 2019.""</p>
+
+<p><a href=""https://docs.aws.amazon.com/AmazonS3/latest/dev/auth-request-sig-v2.html"" rel=""nofollow noreferrer"">https://docs.aws.amazon.com/AmazonS3/latest/dev/auth-request-sig-v2.html</a></p>
+",53959664,https://stackoverflow.com/questions/53959664/s3-backed-cloudfront-and-signed-urls
+57341974,"<p>Okay, here's what I've learned.</p>
+
+<p>As of version 1.18.0, the call to <code>getCredentials</code> does <em>NOT</em> consider id token expiration.  It <em>only</em> checks if the access token is expired, and if it is, it will then refresh the <code>id_token</code> and <code>access token</code>.  Unfortunately the <code>access token</code> expiry is locked in at 24 hours unless you do additional work.</p>
+
+<p>Make sure you have <code>setOIDCCompliant</code> to <code>true</code> when you create your Auth0Account instance, or else the call to renew will hit the <code>/delegation</code> endpoint which is now deprecated and only works if your client id is setup to support non oidc compliant calls.</p>
+
+<p>One other thing to be aware of that's somewhat off topic.  The <code>SecureCredentialsManager</code> clears out credentials if anything appears to go wrong.  This isn't acceptable for me, as simply being offline and being unable to make the call causes the credentials to be cleared.</p>
+",57281604,https://stackoverflow.com/questions/57281604/auth0-android-how-to-renew-id-token
+56367620,"<p>Use cloudformation application templates instead. Though they are still outdated (like the blueprints out there). My advice is that you create an <a href=""http://alexa.design/hosted"" rel=""nofollow noreferrer"">Alexa Hosted Skill</a> instead</p>
+",56330339,https://stackoverflow.com/questions/56330339/unable-to-find-alexa-skill-kit-sdk-factskill-blueprint-on-aws-lamda
+28447858,"<p>Since <code>DescribeJobFlows</code> is deprecated, monitor cluster status is an alternate way to monitor job run progress.</p>
+
+<pre><code>    RunJobFlowResult runJobResult = emr.runJobFlow(runJobFlowRequest);
+    System.out.printf(""Run JobFlowId is: %s\n"", runJobResult.getJobFlowId());
+
+    while(true) {
+      DescribeClusterRequest desc = new DescribeClusterRequest()
+        .withClusterId(runJobResult.getJobFlowId());
+      DescribeClusterResult clusterResult = emr.describeCluster(desc);
+      Cluster cluster = clusterResult.getCluster();
+      String status = cluster.getStatus().getState();
+      System.out.printf(""Status: %s\n"", status);
+      if(status.equals(ClusterState.TERMINATED.toString()) || status.equals(ClusterState.TERMINATED_WITH_ERRORS.toString())) {
+        break;
+      }
+      try {
+        TimeUnit.SECONDS.sleep(30);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+      // maybe other handle
+    }
+</code></pre>
+",28364723,https://stackoverflow.com/questions/28364723/what-is-the-best-practice-to-monitor-aws-emr-job-running-progress
+55228196,"<p>Unsigned's answer is good but is a tad outdated. As of February 2019, CodeBuild allows both caching in an S3 bucket and allows the user to cache locally. You can now specify cache at 3 different layers of a build:</p>
+
+<ul>
+<li>Docker Layer Caching</li>
+<li>Git Layer Cahing (cache the last build and then only build from <code>git diff</code>)</li>
+<li>Custom caching - specified within the <code>cache:</code> portion of your buildspec.yml file. Personally, I cache my node_modules/ here and then cache at the Git Layer.</li>
+</ul>
+
+<p>Source: <a href=""https://aws.amazon.com/blogs/devops/improve-build-performance-and-save-time-using-local-caching-in-aws-codebuild/"" rel=""noreferrer"">https://aws.amazon.com/blogs/devops/improve-build-performance-and-save-time-using-local-caching-in-aws-codebuild/</a></p>
+",44907295,https://stackoverflow.com/questions/44907295/is-there-any-way-to-cache-build-dependencies-using-aws-codebuild
+23637593,"<p>You're running into two problems here: </p>
+
+<ol>
+<li>Due to <a href=""http://en.wikipedia.org/wiki/Same-origin_policy"" rel=""nofollow"">same origin policy</a>, the <code>&lt;iframe&gt;</code> in the resulting page is not going to display an arbitrary URL.</li>
+<li>Even if it could display an arbitrary URL, that URL would have to be configured for SSL.</li>
+</ol>
+
+<p>So, you'll be able to load this (another amazon URL using SSL):</p>
+
+<p><a href=""https://s3.amazonaws.com/MTurk_test/externalpage.htm?url=https%3A%2F%2Fwww.mturk.com"" rel=""nofollow"">https://s3.amazonaws.com/MTurk_test/externalpage.htm?url=https%3A%2F%2Fwww.mturk.com</a></p>
+
+<p>But not this (amazon URL w/o SSL):</p>
+
+<p><a href=""https://s3.amazonaws.com/MTurk_test/externalpage.htm?url=http%3A%2F%2Fwww.mturk.com"" rel=""nofollow"">https://s3.amazonaws.com/MTurk_test/externalpage.htm?url=http%3A%2F%2Fwww.mturk.com</a></p>
+
+<p>And not an arbitrary URL (even with SSL):</p>
+
+<p><a href=""https://s3.amazonaws.com/MTurk_test/externalpage.htm?url=https%3A%2F%2Fwww.google.com"" rel=""nofollow"">https://s3.amazonaws.com/MTurk_test/externalpage.htm?url=https%3A%2F%2Fwww.google.com</a></p>
+
+<p>So, my guess is that this template is horribly outdated and used to work at some point in the past but is not compliant with modern web browser technology.</p>
+
+<p>Best solution is just to provide a link for the worker to click to visit the URL.</p>
+",23619714,https://stackoverflow.com/questions/23619714/amazon-mechanical-turk-externalhit-sample
+63452269,"<p>It is a compatibility issue. Current version of <code>aws-appsync</code> doesn't support <code>apollo-client</code> v3, see this thread for progress:
+<a href=""https://github.com/awslabs/aws-mobile-appsync-sdk-js/issues/448"" rel=""nofollow noreferrer"">https://github.com/awslabs/aws-mobile-appsync-sdk-js/issues/448</a></p>
+<p>Best workaround is this: <a href=""https://stackoverflow.com/questions/60804372/proper-way-to-setup-awsappsyncclient-apollo-react"">Proper way to setup AWSAppSyncClient, Apollo &amp; React</a></p>
+<p>Note the workaround does use two deprecated libraries but can be slightly improved as:</p>
+<pre><code>import { ApolloClient, ApolloLink, InMemoryCache } from &quot;@apollo/client&quot;;
+import { createAuthLink } from &quot;aws-appsync-auth-link&quot;;
+import { createHttpLink } from &quot;apollo-link-http&quot;;
+import AppSyncConfig from &quot;./aws-exports&quot;;
+
+const url = AppSyncConfig.aws_appsync_graphqlEndpoint;
+const region = AppSyncConfig.aws_project_region;
+const auth = {
+  type: AppSyncConfig.aws_appsync_authenticationType,
+  apiKey: AppSyncConfig.aws_appsync_apiKey,
+};
+const link = ApolloLink.from([
+  // @ts-ignore
+  createAuthLink({ url, region, auth }),
+  // @ts-ignore
+  createHttpLink({ uri: url }),
+]);
+const client = new ApolloClient({
+  link,
+  cache: new InMemoryCache(),
+});
+
+export default client;
+
+</code></pre>
+",63438293,https://stackoverflow.com/questions/63438293/cannot-connect-apollo-client-to-aws-appsync
+50857199,"<p>You will need to check at the error you get while trying to execute that statement. Let's see the problems and possible problems:</p>
+
+<h2>Rights</h2>
+
+<p>You will need to make sure the MySQL user you try to execute the query with has the necessary rights to do so. Try to hard-code an <code>insert</code> statement along with all parameters. Are you able to do so? Or do you get an error that you do not have the rights to do so?</p>
+
+<h2>Deprecation</h2>
+
+<p><a href=""http://php.net/manual/ro/function.mysql-query.php"" rel=""nofollow noreferrer"">mysql_<em></a> functions are deprecated. You will need to use either <a href=""http://php.net/manual/ro/mysqli.query.php"" rel=""nofollow noreferrer"">mysqli_</em></a> functions or <a href=""http://php.net/manual/ro/book.pdo.php"" rel=""nofollow noreferrer"">PDO</a>.</p>
+
+<h2>SQL Injection</h2>
+
+<p>Your code has high risks of security due to possibility of <a href=""http://www.tizag.com/mysqlTutorial/mysql-php-sql-injection.php"" rel=""nofollow noreferrer"">SQL Injection</a>. You will need to escape your query via <a href=""http://php.net/manual/ro/mysqli.real-escape-string.php"" rel=""nofollow noreferrer"">mysqli_real_escape_string</a> or parameterize your query via PDO. If you do not do so, users will be able to damage your database if they want to hack your site, or even steal data.</p>
+
+<h2>XSS Injection</h2>
+
+<p>Your code has high risks of security due to possibility of <a href=""https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)"" rel=""nofollow noreferrer"">XSS injection</a> as well. You will need to make sure no scripts will be injected into your fields unless you explicitly want to allow that. XSS injection is a possible means to steal data from other users.</p>
+
+<h2>Is it message or messages</h2>
+
+<p>Check what is inside your <code>$_POST[""messages""]</code>. Is it an array? If so, you try to use an array as a string and hence you get an exception.</p>
+
+<h2>Check your logs</h2>
+
+<p>You will need to check the server logs to find the exact problem you face. If server logging is not enabled, then you will need to enable it and run the PHP code again.</p>
+",50856581,https://stackoverflow.com/questions/50856581/not-able-to-insert-data-to-mysql-database
+49307139,"<p>Looking at the <a href=""https://github.com/aws/aws-sdk-java/blob/master/aws-java-sdk-applicationautoscaling/src/main/java/com/amazonaws/services/applicationautoscaling/AWSApplicationAutoScalingClient.java#L198"" rel=""nofollow noreferrer"">aws-sdk</a> library source code, the call you're trying is deprecated, you'd want to use the following API</p>
+
+<p><code>AWSApplicationAutoScalingClientBuilder#defaultClient()</code> </p>
+
+<p>e.g.</p>
+
+<pre><code>static AWSApplicationAutoScalingClient aaClient = AWSApplicationAutoScalingClientBuilder.defaultClient().build();
+</code></pre>
+",49306994,https://stackoverflow.com/questions/49306994/how-to-create-awsapplicationautoscalingclient-without-the-deprecated-warning
+63503061,"<p>I think you may have made the same mistake I did before. In your development.rb file, do not edit the text to add your specific S3 keys. Just copy-paste the text directly as is listed in the tutorial.</p>
+<pre class=""lang-rb prettyprint-override""><code>#development.rb
+config.paperclip_defaults = {
+  :storage =&gt; :s3,
+  :s3_credentials =&gt; {
+    :bucket =&gt; ENV['AWS_BUCKET'],
+    :access_key_id =&gt; ENV['AWS_ACCESS_KEY_ID'],
+    :secret_access_key =&gt; ENV['AWS_SECRET_ACCESS_KEY']
+  }
+}
+</code></pre>
+<p>Then, set the environmental variables AWS_BUCKET, AWS_ACCESS_KEY_ID, and AWS_SECRET_ACCESS_KEY as described by the author of the dev center article.</p>
+<p>Btw, I'm not sure why you are using PaperClip(deprecated gem) on Rails 6. Rails 6 has ActiveStorage library to do the same thing perfectly.</p>
+",63493401,https://stackoverflow.com/questions/63493401/paperclip-is-not-running-on-the-local-host-ruby-on-rails
+35101653,"<p>Add a valid version to your $params array, e.g:</p>
+
+<pre><code>""ResponseGroup"" =&gt; ""Images,ItemAttributes,Offers"",
+""Version"" =&gt; ""2015-10-01""
+</code></pre>
+
+<p>I tested your script and found it works with the above.</p>
+
+<p>The cause of the issue seems to be that the API defaults to a deprecated value if you omit the version parameter.</p>
+",35101317,https://stackoverflow.com/questions/35101317/i-am-trying-to-use-amazon-api-code-in-php-but-it-is-giving-me-error-of-not-suppo
+41386467,"<p><strong>1)</strong> Configure your API Gateway resource to use <a href=""http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-create-api-as-simple-proxy-for-lambda.html"" rel=""noreferrer"">Lambda Proxy Integration</a> by checking the checkbox labeled <strong>""Use Lambda Proxy integration""</strong> on the ""Integration Request"" screen of the API Gateway resource definition. (Or define it in your cloudformation/terraform/serverless/etc config)</p>
+
+<p><strong>2)</strong> Change your lambda code in 2 ways</p>
+
+<ul>
+<li>Process the incoming <code>event</code> (1st function argument) appropriately. It is no longer just the bare payload, it represents the entire HTTP request including headers, query string, and body. Sample below. Key point is that JSON bodies will be strings requiring explicit <code>JSON.parse(event.body)</code> call (don't forget <code>try/catch</code> around that). Example is below.</li>
+<li>Respond by calling the callback with null then a response object that provides the HTTP details including <code>statusCode</code>, <code>body</code>, and <code>headers</code>.
+
+<ul>
+<li><code>body</code> should be a string, so do <code>JSON.stringify(payload)</code> as needed</li>
+<li><code>statusCode</code> can be a number</li>
+<li><code>headers</code> is an object of header names to values</li>
+</ul></li>
+</ul>
+
+<h2>Sample Lambda Event Argument for Proxy Integration</h2>
+
+<pre><code>{
+    ""resource"": ""/example-path"",
+    ""path"": ""/example-path"",
+    ""httpMethod"": ""POST"",
+    ""headers"": {
+        ""Accept"": ""*/*"",
+        ""Accept-Encoding"": ""gzip, deflate"",
+        ""CloudFront-Forwarded-Proto"": ""https"",
+        ""CloudFront-Is-Desktop-Viewer"": ""true"",
+        ""CloudFront-Is-Mobile-Viewer"": ""false"",
+        ""CloudFront-Is-SmartTV-Viewer"": ""false"",
+        ""CloudFront-Is-Tablet-Viewer"": ""false"",
+        ""CloudFront-Viewer-Country"": ""US"",
+        ""Content-Type"": ""application/json"",
+        ""Host"": ""exampleapiid.execute-api.us-west-2.amazonaws.com"",
+        ""User-Agent"": ""insomnia/4.0.12"",
+        ""Via"": ""1.1 9438b4fa578cbce283b48cf092373802.cloudfront.net (CloudFront)"",
+        ""X-Amz-Cf-Id"": ""oCflC0BzaPQpTF9qVddpN_-v0X57Dnu6oXTbzObgV-uU-PKP5egkFQ=="",
+        ""X-Forwarded-For"": ""73.217.16.234, 216.137.42.129"",
+        ""X-Forwarded-Port"": ""443"",
+        ""X-Forwarded-Proto"": ""https""
+    },
+    ""queryStringParameters"": {
+        ""bar"": ""BarValue"",
+        ""foo"": ""FooValue""
+    },
+    ""pathParameters"": null,
+    ""stageVariables"": null,
+    ""requestContext"": {
+        ""accountId"": ""666"",
+        ""resourceId"": ""xyz"",
+        ""stage"": ""dev"",
+        ""requestId"": ""5944789f-ce00-11e6-b2a2-dfdbdba4a4ee"",
+        ""identity"": {
+            ""cognitoIdentityPoolId"": null,
+            ""accountId"": null,
+            ""cognitoIdentityId"": null,
+            ""caller"": null,
+            ""apiKey"": null,
+            ""sourceIp"": ""73.217.16.234"",
+            ""accessKey"": null,
+            ""cognitoAuthenticationType"": null,
+            ""cognitoAuthenticationProvider"": null,
+            ""userArn"": null,
+            ""userAgent"": ""insomnia/4.0.12"",
+            ""user"": null
+        },
+        ""resourcePath"": ""/example-path"",
+        ""httpMethod"": ""POST"",
+        ""apiId"": ""exampleapiid""
+    },
+    ""body"": ""{\n  \""foo\"": \""FOO\"",\n  \""bar\"": \""BAR\"",\n  \""baz\"": \""BAZ\""\n}\n"",
+    ""isBase64Encoded"": false
+}
+</code></pre>
+
+<h2>Sample Callback Response Shape</h2>
+
+<pre><code>callback(null, {
+  statusCode: 409,
+  body: JSON.stringify(bodyObject),
+  headers: {
+    'Content-Type': 'application/json'
+  }
+})
+</code></pre>
+
+<hr>
+
+<p><strong>Notes</strong>
+- I believe the methods on <code>context</code> such as <code>context.succeed()</code> are deprecated. They are no longer documented although they do still seem to work. I think coding to the callback API is the correct thing going forward.</p>
+",31329495,https://stackoverflow.com/questions/31329495/is-there-a-way-to-change-the-http-status-codes-returned-by-amazon-api-gateway
+34177254,"<p>There's a problem with the premise of your question.  The fact that CloudFront <em>may</em> cache your objects for some period of time actually has little relevance when selecting an S3 storage class.</p>
+
+<p><code>REDUCED_REDUNDANCY</code> is sometimes less expensive&sup1; <em>because S3 stores your data on fewer physical devices</em>, reducing the reliability somewhat in exchange for lower pricing... and in the event of failures, the object is statistically more likely to be lost by S3.  If S3 loses the object because of the reduced redundancy, CloudFront will at some point begin returning errors.  </p>
+
+<p>The deciding factor in choosing this storage class is whether the object is easily replaced.</p>
+
+<blockquote>
+  <p>Reduced Redundancy Storage (RRS) is an Amazon S3 storage option that enables customers to reduce their costs by storing noncritical, reproducible data at lower levels of redundancy than Amazon S3’s standard storage. It provides a cost-effective, highly available solution for distributing or sharing content that is durably stored elsewhere, or for storing thumbnails, transcoded media, or other processed data that can be easily reproduced. </p>
+  
+  <p><a href=""https://aws.amazon.com/s3/reduced-redundancy/"" rel=""noreferrer"">https://aws.amazon.com/s3/reduced-redundancy/</a></p>
+</blockquote>
+
+<p><code>STANDARD_IA</code> (infrequent access) is less expensive for a different reason: the storage savings are offset by retrieval charges.  If an object is downloaded <em>more than once per month</em>, the combined charge will exceed the cost of <code>STANDARD</code>.  It is intended for objects that will genuinely be accessed infrequently.  Since CloudFront has multiple edge locations, each with its own independent cache,&sup2; whether an object is ""currently stored in"" CloudFront is not a question with a simple yes/no answer.  It is also not possible to ""game the system"" by specifying large <code>Cache-Control: max-age</code> values.  CloudFront has no charge for its cache storage, so it's only sensible that an object can be purged from the cache before the expiration time you specify.  Indeed, anecdotal observations confirm what the docs indicate, that objects are sometimes purged from CloudFront due to a relative lack of ""popularity.""</p>
+
+<p>The deciding factor in choosing this storage class is whether the increased data transfer (retrieval) charges will be low enough to justify the storage charge savings that they offset.  Unless the object is expected to be downloaded less than once or twice a month, this storage class does not represent a cost savings.</p>
+
+<p>Standard/Infrequent Access should be reserved for things you really don't expect to be needed often, like tarballs and database dumps and images unlikely to be reviewed after they are first accessed, such as (borrowing an example from my world) a proof-of-purchase/receipt scanned and submitted by a customer for a rebate claim.  Once the rebate has been approved, it's very unlikely we'll need to look at that receipt again, but we do need to keep it on file.  Hello, Standard_IA.  (Note that S3 does this automatically for me, after the file has been stored for 30 days, using a lifecycle policy on the bucket).</p>
+
+<blockquote>
+  <p>Standard - IA is ideally suited for long-term file storage, older data from sync and share, backup data, and disaster recovery files.</p>
+  
+  <p><a href=""https://aws.amazon.com/s3/faqs/#sia"" rel=""noreferrer"">https://aws.amazon.com/s3/faqs/#sia</a></p>
+</blockquote>
+
+<p>Side note: one alternative mechanism for saving some storage cost is to <code>gzip -9</code> the content before storing, and set <code>Content-Encoding: gzip</code>.  I have been doing this for years with S3 and am still waiting for my first support ticket to come in reporting a browser that can't handle it.  Even content that is allegedly already compressed -- such as <code>.xlsx</code> spreadsheets -- will often shrink a little bit, and every byte you squeeze out means slightly lower storage <em>and download bandwidth</em> charges. </p>
+
+<p>Fundamentally, if your content is easily replaceable, such as resized images where you still have the original... or reports that can easily be rerun from source data... or content backed up elsewhere (AWS is essentially always my first choice for cloud services, but I do have backups of my S3 assets stored in another cloud provider's storage service, for example)... then reduced redundancy is a good option.  </p>
+
+<hr>
+
+<p>&sup1; <em><code>REDUCED_REDUNDANCY</code> is sometimes less expensive</em> <strong>only in some regions</strong> as of late 2016.  Prior to that, it was priced lower than <code>STANDARD</code>, but in an odd quirk of the strange world of competitive pricing, as a result of <a href=""https://aws.amazon.com/blogs/aws/aws-storage-update-s3-glacier-price-reductions/"" rel=""noreferrer"">S3 price reductions announced in November, 2016</a>, in some AWS regions, the <code>STANDARD</code> storage class is now slightly <em>less</em> expensive than <code>REDUCED_REDUNDANCY</code> (""RRS"").  For example, in us-east-1, Standard was reduced from $0.03/GB to $0.023/GB, but RRS remained at $0.024/GB... leaving <em>no</em> obvious reason to ever use RRS in that region.  The structure of the pricing pages leaves the impression that RRS may no longer be considered a current-generation offering by AWS.  Indeed, it's an older offering than both <code>STANDARD_IA</code> and <code>GLACIER</code>.  It is unlikely to ever be fully deprecated or eliminated, but they may not be inclined to reduce its costs to a point that lines up with the other storage classes if it's no longer among their primary offerings.</p>
+
+<p>&sup2; <em>""CloudFront has multiple edge locations, each with its own independent cache""</em> is still a technically true statement, but CloudFront quietly began to roll out and then announced some significant architectural changes in late 2016, with the introduction of the <a href=""https://aws.amazon.com/about-aws/whats-new/2016/11/announcing-regional-edge-caches-for-amazon-cloudfront/"" rel=""noreferrer"">regional edge caches</a>.  It is now, in a sense, ""less true"" that the global edge caches are indepenent.  They still are, but it makes less of a difference, since CloudFront is now a two-tier network, with the global (outer tier) edge nodes <em>sometimes</em> fetching content from the regional (inner tier) edge nodes, instead of directly from the origin server.  This should have the impact of increasing the likelihood of an object being considered to be ""in"" the cache, since a cache miss in the outer tier might be transformed into a hit by the inner tier, which is also reported to have more available cache storage space than some or all of the outer tier. It is not yet clear from external observations how much of an impact this has on hit rates on S3 origins, as the documentation indicates the regional edges are not used for S3 (only custom origins) but it seems less than clear that this universally holds true, particularly with the introduction of <a href=""http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-at-the-edge.html"" rel=""noreferrer"">Lambda@Edge</a>. It might be significant, but as of this writing, I do not believe it to have any material impact on my answer to the question presented here.</p>
+",34168923,https://stackoverflow.com/questions/34168923/aws-s3-standard-infrequent-access-vs-reduced-redundancy-storage-class-when-coupl
+27768332,"<p>Boto and the underlying EMR API is currently mixing the terms <em>cluster</em> and <em>job flow</em>, and job flow is being <a href=""http://docs.aws.amazon.com/ElasticMapReduce/latest/API/API_DescribeJobFlows.html"">deprecated</a>. I consider them synonyms.</p>
+
+<p>You create a new cluster by calling the <code>boto.emr.connection.run_jobflow()</code> function. It will return the cluster ID which EMR generates for you.</p>
+
+<p>First all the mandatory things:</p>
+
+<pre><code>#!/usr/bin/env python
+
+import boto
+import boto.emr
+from boto.emr.instance_group import InstanceGroup
+
+conn = boto.emr.connect_to_region('us-east-1')
+</code></pre>
+
+<p>Then we specify instance groups, including the spot price we want to pay for the TASK nodes:</p>
+
+<pre><code>instance_groups = []
+instance_groups.append(InstanceGroup(
+    num_instances=1,
+    role=""MASTER"",
+    type=""m1.small"",
+    market=""ON_DEMAND"",
+    name=""Main node""))
+instance_groups.append(InstanceGroup(
+    num_instances=2,
+    role=""CORE"",
+    type=""m1.small"",
+    market=""ON_DEMAND"",
+    name=""Worker nodes""))
+instance_groups.append(InstanceGroup(
+    num_instances=2,
+    role=""TASK"",
+    type=""m1.small"",
+    market=""SPOT"",
+    name=""My cheap spot nodes"",
+    bidprice=""0.002""))
+</code></pre>
+
+<p>Finally we start a new cluster:</p>
+
+<pre><code>cluster_id = conn.run_jobflow(
+    ""Name for my cluster"",
+    instance_groups=instance_groups,
+    action_on_failure='TERMINATE_JOB_FLOW',
+    keep_alive=True,
+    enable_debugging=True,
+    log_uri=""s3://mybucket/logs/"",
+    hadoop_version=None,
+    ami_version=""2.4.9"",
+    steps=[],
+    bootstrap_actions=[],
+    ec2_keyname=""my-ec2-key"",
+    visible_to_all_users=True,
+    job_flow_role=""EMR_EC2_DefaultRole"",
+    service_role=""EMR_DefaultRole"")
+</code></pre>
+
+<p>We can also print the cluster ID if we care about that:</p>
+
+<pre><code>print ""Starting cluster"", cluster_id
+</code></pre>
+",26314316,https://stackoverflow.com/questions/26314316/how-to-launch-and-configure-an-emr-cluster-using-boto
+46423676,"<p>Send from a cron script or other scheduled task that does not have a timeout - search on here for how to do that.</p>
+
+<p>Send more efficiently - see <a href=""https://github.com/PHPMailer/PHPMailer/blob/master/examples/mailing_list.phps"" rel=""nofollow noreferrer"">the mailing list example provided with PHPMailer</a>.</p>
+
+<p>Get your local mail server to work for you - submit messages to it (which will be very fast) and let it deal with slow deliveries - it's what mail servers are for.</p>
+
+<p>I can see you've based your code on an obsolete example and are using an old version of PHPMailer, so <a href=""https://github.com/PHPMailer/PHPMailer"" rel=""nofollow noreferrer"">get the latest version</a>.</p>
+",46423207,https://stackoverflow.com/questions/46423207/trigger-and-execute-a-request-in-back-end-php
+43450379,"<p>Ah! That documented process won't work if the AMI used to originally launch the instance has been deprecated (expired).</p>
+
+<p>For step 5, simply select your AMI from the <strong>AMIs</strong> section of the EC2 management console, then choose the <strong>Launch</strong> command from the Actions menu. This will let you launch a new machine using the AMI you created. Make sure you choose a new keypair for which you have the <code>.pem</code> file.</p>
+
+<p>Then, just continue from step 6. The general steps are:</p>
+
+<ul>
+<li>Stop your original instance</li>
+<li>Detach the boot disk (""Disk A"")</li>
+<li>Launch another Windows instance (or use one you already have access to)</li>
+<li>Attach Disk A to the 2nd instance</li>
+<li>Update the <code>\Program Files\Amazon\Ec2ConfigService\Settings\config.xml</code> file on Disk A and update the <code>Ec2SetPassword</code> parameter to <code>Enabled</code> (see Step 9 on that documentation page)</li>
+<li>Detach Disk A from the 2nd instance and reattach it to the original instance (from Step 5 on the documentation page)</li>
+<li>Start the original instance and try to login</li>
+</ul>
+",43449710,https://stackoverflow.com/questions/43449710/how-to-retrieve-password-from-aws-amazon-com-if-lost-my-pem-file
+48801374,"<p>There are several ways to solve this problem.
+<strong>First option.</strong></p>
+
+<ol>
+<li>Install a free database version of the Oracle XE version on EC2
+instance(It is very easy and fast)</li>
+<li>Export a schema from the RDS instance to DATA_PUMP_DIR
+directory. Use <code>DBMS_DATAPUMP</code> package  or run <code>expdp user/pass@rds</code> on EC2 to create a dump file.</li>
+<li>Create database link on RDS instance between RDS DB and Oracle XE
+DB.</li>
+</ol>
+
+<blockquote>
+  <p>If you are creating a database link between two DB instances inside
+  the same VPC or peered VPCs the two DB instances should have a valid
+  route between them.
+  <a href=""https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Appendix.Oracle.CommonDBATasks.Database.html#Appendix.Oracle.CommonDBATasks.DBLinks"" rel=""nofollow noreferrer"">Adjusting Database Links for Use with DB Instances in a VPC</a></p>
+</blockquote>
+
+<ol start=""4"">
+<li><p>Copy the dump files from RDS instance to Oracle XE DB on EC2 uses
+the <code>DBMS_FILE_TRANSFER.PUT_FILE</code> via database link</p></li>
+<li><p>Copy files from the <code>DATA_PUMP_DIR</code> directory Oracle XE on EC2 instance to the S3.</p></li>
+</ol>
+
+<p><strong>Second option.</strong>
+Use the obsolete utility <code>exp</code> to export. It has restrictions on the export of certain types of data and is slower. </p>
+
+<ol>
+<li>Run <code>exp user/password@rds</code> on EC2 instance.</li>
+<li>Copy files from the directory Oracle XE on EC2 instance to the S3</li>
+</ol>
+
+<blockquote>
+  <p>Original export is desupported for general use as of Oracle Database
+  11g. The only supported use of Original Export in 11g is backward
+  migration of XMLType data to a database version 10g release 2 (10.2)
+  or earlier. Therefore, Oracle recommends that you use the new Data
+  Pump Export and Import utilities, except in the following situations
+  which require Original Export and Import:
+  <a href=""https://docs.oracle.com/cd/B28359_01/server.111/b28319/exp_imp.htm#g1070082"" rel=""nofollow noreferrer"">Original Export and Import</a></p>
+</blockquote>
+",48794500,https://stackoverflow.com/questions/48794500/how-to-export-using-data-pump-to-s3-bucket
+47084779,"<p>You'll need to use a different parameter name. <code>select</code> now has a meaning to S3, so it is no longer quietly discarded.</p>
+
+<p><strong>Update</strong>: The sudden appearance of the <code>?select</code> subresource appears to have been when AWS began deploying a new feature, <a href=""https://aws.amazon.com/blogs/aws/s3-glacier-select/"" rel=""nofollow noreferrer"">S3 Select</a>, which allows JSON and CSV objects to actually be queried for a subset of their content, using SQL expressions.  The feature was announced later the same month.</p>
+
+<p>The original answer follows.</p>
+
+<hr>
+
+<p>For reasons that aren't readily explainable, <code>select=</code> in the query string causes S3 to interpret your request as... something different.  Exactly what it is, is not clear.</p>
+
+<pre><code>&lt;ResourceType&gt;SELECT&lt;/ResourceType&gt;
+</code></pre>
+
+<p>Interestingly, if you try a POST, you get an error message saying that <code>POST</code> is not allowed, either, but the <code>Allow: POST</code> is then no longer in the response headers.</p>
+
+<p>The bucket logs show the request operation as <code>REST.GET.SELECT</code>, which doesn't seem to be documented, where a normal <code>GET</code> request is logged as <code>REST.GET.OBJECT</code>.</p>
+
+<p>So you're triggering some unexpected behavior, and you'll need to use something different.</p>
+
+<p>The fact that it previously worked tends to rule out my initial theory, that you were somehow prompting S3 to assume you wanted to make a deprecated SOAP request (which requires <code>POST</code>), but if it's really true that this was working all along, then I'm inclined instead to think instead that you may have inadvertently stumbled on a feature that has not yet been released. </p>
+
+<p>Unofficially, S3 silently ignores most unexpected query string parameters.  Signature V2 also ignores them completely (and actually requires them <em>not</em> to be signed, if I remember my test results of that algorithm correctly).</p>
+
+<p>Officially, it seems you should be using a query string parameter beginning with <code>x-</code> if you definitely don't want the service to interpret it.  This will also write the parameter to the logs, which might prove to be a useful side effect in the future for debugging purposes.</p>
+
+<blockquote>
+  <p>You can include custom information to be stored in the access log record for a request by adding a custom query-string parameter to the URL for the request. <strong>Amazon S3 will ignore query-string parameters that begin with <code>x-</code></strong>, but will include those parameters in the access log record for the request, as part of the Request-URI field of the log record. <em>(emphasis added)</em></p>
+  
+  <p><a href=""http://docs.aws.amazon.com/AmazonS3/latest/dev/LogFormat.html"" rel=""nofollow noreferrer"">http://docs.aws.amazon.com/AmazonS3/latest/dev/LogFormat.html</a></p>
+</blockquote>
+",47073577,https://stackoverflow.com/questions/47073577/aws-s3-query-string-parameter-causes-method-not-allowed-error
