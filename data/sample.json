@@ -1,0 +1,87 @@
+{
+    "tags": [
+        "configuration",
+        "amazon-web-services",
+        "environment-variables",
+        "amazon-elastic-beanstalk"
+    ],
+    "is_answered": true,
+    "view_count": 4872,
+    "answer_count": 3,
+    "score": 3,
+    "last_activity_date": 1519414728,
+    "creation_date": 1390309155,
+    "question_id": 21258870,
+    "content_license": "CC BY-SA 3.0",
+    "link": "https://stackoverflow.com/questions/21258870/using-environment-properties-with-files-in-elastic-beanstalk-config-files",
+    "title": "Using environment properties with files in elastic beanstalk config files",
+    "body": "<p>Working with Elastic Beanstalk <code>.config</code> files is kinda... interesting. I'm trying to  use environment properties with the <code>files:</code> configuration option in an Elastc Beanstalk <code>.config</code> file. What I'd like to do is something like:</p>\n\n<pre><code>files:\n    \"/etc/passwd-s3fs\" :\n        mode: \"000640\"\n        owner: root\n        group: root\n        content: |\n            ${AWS_ACCESS_KEY_ID}:${AWS_SECRET_KEY}\n</code></pre>\n\n<p>To create an <code>/etc/passwd-s3fs</code> file with content something like:</p>\n\n<pre><code>ABAC73E92DEEWEDS3FG4E:aiDSuhr8eg4fHHGEMes44zdkIJD0wkmd\n</code></pre>\n\n<p>I.e. use the environment properties defined in the AWS Console (<code>Elastic Beanstalk/Configuration/Software Configuration/Environment Properties</code>) to initialize system configuration files and such.</p>\n\n<p>I've found that it is possible to use environment properties in <code>container-command:</code>s, like so:</p>\n\n<pre><code>container_commands:\n    000-create-file:\n        command: echo ${AWS_ACCESS_KEY_ID}:${AWS_SECRET_KEY} &gt; /etc/passwd-s3fs\n</code></pre>\n\n<p>However, doing so will require me to manually set owner, group, file permissions etc. It's also much more of a hassle when dealing with larger configuration files than the <code>Files:</code> configuration option...</p>\n\n<p>Anyone got any tips on this?</p>\n",
+    "answers": {
+        "48896686": {
+            "is_accepted": false,
+            "score": 2,
+            "last_activity_date": 1519414728,
+            "last_edit_date": 1519414728,
+            "creation_date": 1519175178,
+            "answer_id": 48896686,
+            "question_id": 21258870,
+            "content_license": "CC BY-SA 3.0",
+            "body": "<p>I am gravedigging but since I stumbled across this in the course of my travels, there is a \"clever\" way to do what you describe\u2013<em>at least in 2018, and at least since 2016</em>. You can retrieve an environment variable by key with <a href=\"https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/custom-platforms-scripts.html\" rel=\"nofollow noreferrer\">get-config</a>:</p>\n\n<pre><code>/opt/elasticbeanstalk/bin/get-config environment --key YOUR_ENV_VAR_KEY\n</code></pre>\n\n<p>And likewise all environment variables with (as JSON or <code>--output YAML</code>)</p>\n\n<pre><code>/opt/elasticbeanstalk/bin/get-config environment\n</code></pre>\n\n<p>Example usage in a container command:</p>\n\n<pre><code>container_commands:\n    00_store_env_var_in_file_and_chmod:\n        command: \"/opt/elasticbeanstalk/bin/get-config environment --key YOUR_ENV_KEY | install -D /dev/stdin /etc/somefile &amp;&amp; chmod 640 /etc/somefile\"\n</code></pre>\n\n<p>Example usage in a file:</p>\n\n<pre><code>files:\n    \"/opt/elasticbeanstalk/hooks/appdeploy/post/00_do_stuff.sh\":\n      mode: \"000755\"\n      owner: root\n      group: root\n      content: |\n        #!/bin/bash\n        YOUR_ENV_VAR=$(source /opt/elasticbeanstalk/bin/get-config environment --key YOUR_ENV_VAR_KEY)\n        echo \"Hello $YOUR_ENV_VAR\"\n</code></pre>\n\n<p>I was introduced to get-config by Thomas Reggi in <a href=\"https://serverfault.com/a/771067\">https://serverfault.com/a/771067</a>.</p>\n",
+            "upvotes": [
+                1566259200,
+                1519171200
+            ],
+            "comments": [
+                1593289630
+            ]
+        },
+        "24216138": {
+            "is_accepted": false,
+            "score": 3,
+            "last_activity_date": 1402713704,
+            "creation_date": 1402713704,
+            "answer_id": 24216138,
+            "question_id": 21258870,
+            "content_license": "CC BY-SA 3.0",
+            "body": "<p>How about something like this.  I will use the word \"context\" for dev vs. qa.</p>\n\n<p>Create one file per context:</p>\n\n<p><strong>dev-envvars</strong></p>\n\n<pre><code>export MYAPP_IP_ADDR=111.222.0.1\nexport MYAPP_BUCKET=dev\n</code></pre>\n\n<p><strong>qa-envvars</strong></p>\n\n<pre><code>export MYAPP_IP_ADDR=111.222.1.1\nexport MYAPP_BUCKET=qa\n</code></pre>\n\n<p>Upload those files to a private S3 folder, S3://myapp/config.</p>\n\n<p>In IAM, add a policy to the aws-elasticbeanstalk-ec2-role role that allows reading S3://myapp/config.</p>\n\n<p>Add the following file to your .ebextensions directory:</p>\n\n<p><strong>envvars.config</strong></p>\n\n<pre><code>files:\n  \"/opt/myapp_envvars\" :\n    mode: \"000644\"\n    owner: root\n    group: root\n    # change the source when you need a different context\n    #source: https://s3-us-west-2.amazonaws.com/myapp/dev-envvars\n    source: https://s3-us-west-2.amazonaws.com/myapp/qa-envvars\n\nResources:\n  AWSEBAutoScalingGroup:\n    Metadata:\n      AWS::CloudFormation::Authentication:\n        S3Access:\n          type: S3\n          roleName: aws-elasticbeanstalk-ec2-role\n          buckets: myapp\n\ncommands:\n  # commands executes after files per \n  # http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/customize-containers-ec2.html\n  10-load-env-vars:\n    command: . /opt/myapp_envvars\n</code></pre>\n\n<p>Per the <a href=\"http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/customize-containers-ec2.html#customize-containers-format-commands\" rel=\"nofollow\">AWS Developer's Guide</a>, commands \"run before the application and web server are set up and the application version file is extracted,\" and before container-commands. I guess the question will be whether that is early enough in the boot process to make the environment variables available when you need them. I actually wound up writing an init.d script to start and stop things in my EC2 instance. I used the technique above to deploy the script.</p>\n\n<p>Credit for the \u201cResources\u201d section that allows downloading from secured S3 goes to the May 7, 2014 post that Joshua@AWS made to <a href=\"https://forums.aws.amazon.com/message.jspa?messageID=541634\" rel=\"nofollow\">this thread</a>.</p>\n",
+            "upvotes": [
+                1457827200,
+                1427155200,
+                1425254400,
+                1424822400
+            ],
+            "comments": []
+        },
+        "21274576": {
+            "is_accepted": false,
+            "score": 2,
+            "last_activity_date": 1390366994,
+            "creation_date": 1390366994,
+            "answer_id": 21274576,
+            "question_id": 21258870,
+            "content_license": "CC BY-SA 3.0",
+            "body": "<p><em>I assume that <code>AWS_ACCESS_KEY_ID</code> and <code>AWS_SECRET_KEY</code> are known to you prior to the app deployment.</em></p>\n\n<p>You can create the file on your workstation and submit it to Elastic Beanstalk instance with the code on <code>$ git aws.push</code></p>\n\n<pre><code>$ cd .ebextensions\n$ echo 'ABAC73E92DEEWEDS3FG4E:aiDSuhr8eg4fHHGEMes44zdkIJD0wkmd' &gt; passwd-s3fs\n</code></pre>\n\n<p>In .config:</p>\n\n<pre><code>files:\n    \"/etc/passwd-s3fs\" :\n        mode: \"000640\"\n        owner: root\n        group: root\n\ncontainer_commands:\n    10-copy-passwords-file:\n        command: \"cat .ebextensions/passwd-s3fs &gt; /etc/passwd-s3fs\"\n</code></pre>\n\n<p>You might have to play with the permissions or execute <code>cat</code> as <code>sudo</code>. Also, I put the file into .ebextensions for example, it can be anywhere in your project.</p>\n\n<p>Hope it helps.</p>\n",
+            "upvotes": [
+                1402704000,
+                1390953600
+            ],
+            "comments": [
+                1390553502,
+                1390513449,
+                1390466907,
+                1390404975,
+                1390377461
+            ]
+        }
+    },
+    "upvotes": [
+        1479254400,
+        1424822400,
+        1402704000
+    ],
+    "comments": [
+        1425306029,
+        1425293101,
+        1425133150
+    ]
+}
