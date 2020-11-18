@@ -4,3 +4,4 @@ code/preprocess stackexchange data/.ipynb_checkpoints/
 data/*.jsonl
 data/*.swp
 .vscode/
+.idea/
