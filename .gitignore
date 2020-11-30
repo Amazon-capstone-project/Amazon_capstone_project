@@ -5,3 +5,5 @@ data/*.jsonl
 data/*.swp
 .vscode/
 .idea/
+.ipynb_checkpoints/
+.vscode/

@@ -35,7 +35,7 @@ These comments contain the target keywords but are actually not indicating obsol
 871	103349458.0	58505922.0	2695716			
 ```
 
-They are matched by patterns including:
+They are matched by 'flase positive' patterns including:
 
 ```text
  'outdated data',
@@ -52,4 +52,21 @@ They are matched by patterns including:
  'updateOutdatedInstancesOnly',
  'Browser was outdated',
  'not outdated'
+```
+
+Irrelevant subjects include:
+
+```py
+[
+    "disk",
+    "flash", 
+    "plugins",
+    "data"
+]
+```
+
+Additional "true positive" keywords.
+
+```text
+discouraged
 ```

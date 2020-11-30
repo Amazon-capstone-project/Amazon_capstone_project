@@ -1,0 +1,5 @@
+.ipynb_checkpoints/
+debug.log
+.*.ipynb
+heuristic.ipynb
+keywords_extraction.ipynb
